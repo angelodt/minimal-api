@@ -20,7 +20,7 @@ namespace minimal_api.Dominio.Servicos
         }
         public Administrador Login(LoginDTO loginDTO)
         {
-            var adm = _contexto.administradores.Where(a => a.Email == loginDTO.Email && a.Senha == loginDTO.Senha).FirstOrDefault();
+            var adm = _contexto.Administradores.Where(a => a.Email == loginDTO.Email && a.Senha == loginDTO.Senha).FirstOrDefault();
             return adm;
         }
     }

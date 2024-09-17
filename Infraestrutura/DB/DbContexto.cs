@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using minimal_api.Dominio.Entidades;
 using MinimalApi.Dominio.Entidades;
 
 namespace MinimalApi.Infraestrutura.DB
 {
     public class DbContexto : DbContext
     {
-        public DbSet<Administrador> administradores { get; set; } = default;
+        public DbSet<Administrador> Administradores { get; set; } = default;
+
+        public DbSet<Veiculo> Veiculos { get; set; } = default;
 
         private readonly IConfiguration _configurationAppSettings;
 
