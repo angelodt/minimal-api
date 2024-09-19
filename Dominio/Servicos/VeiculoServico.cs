@@ -14,7 +14,7 @@ namespace minimal_api.Dominio.Servicos
         public VeiculoServico(DbContexto contexto) 
         {
             _contexto = contexto;
-        }
+        }        
         
         public void Apagar(Veiculo veiculo)
         {
@@ -24,8 +24,10 @@ namespace minimal_api.Dominio.Servicos
 
         public void Atualizar(Veiculo veiculo)
         {
+            if(IVeiculoServico.ValidarDadosVeículo(veiculo).Count() == 0 ) {
             _contexto.Veiculos.Update(veiculo);
             _contexto.SaveChanges();
+            } else throw new Exception("Não foi possível atualizar o veículo: Novos dados incompletos.");
         }
 
         public Veiculo? BuscarPorId(int id)
@@ -35,8 +37,10 @@ namespace minimal_api.Dominio.Servicos
 
         public void Incluir(Veiculo veiculo)
         {
-            _contexto.Veiculos.Add(veiculo);
-            _contexto.SaveChanges();
+            if(IVeiculoServico.ValidarDadosVeículo(veiculo).Count() == 0 ) {
+                _contexto.Veiculos.Add(veiculo);
+                _contexto.SaveChanges();
+            } else throw new Exception("Não foi possível salvar o veículo: Dados incompletos.");
         }
 
         public List<Veiculo> Todos(int pagina = 1, string nome = null, string marca = null, int? ano = null)
@@ -47,7 +51,6 @@ namespace minimal_api.Dominio.Servicos
                 query.Where(v => v.Nome.ToLower().Contains(nome.ToLower()));
             }
             int ItensPorPagina = 10;
-            
             return [.. query.Skip((pagina-1)*ItensPorPagina).Take(ItensPorPagina)];
         }
     }
