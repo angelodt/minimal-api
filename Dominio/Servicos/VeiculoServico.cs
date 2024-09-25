@@ -49,6 +49,12 @@ namespace minimal_api.Dominio.Servicos
             if(!string.IsNullOrEmpty(nome))
             {
                 query.Where(v => v.Nome.ToLower().Contains(nome.ToLower()));
+            } else if(!string.IsNullOrEmpty(marca))
+            {
+                query.Where(v => v.Marca.ToLower().Contains(marca.ToLower()));
+            } else if(ano > 1768)
+            {
+                query.Where(v => v.Ano.Equals(ano));
             }
             int ItensPorPagina = 10;
             return [.. query.Skip((pagina-1)*ItensPorPagina).Take(ItensPorPagina)];

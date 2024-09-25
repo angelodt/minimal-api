@@ -10,6 +10,7 @@ using minimal_api.Dominio.Servicos;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.DTOs;
 using MinimalApi.Infraestrutura.DB;
+using MinimalApi.Dominio.DTOs;
 
 #region Builder
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +20,8 @@ builder.Services.AddScoped<IVeiculoServico, VeiculoServico>();
 
 builder.Services.AddDbContext<DbContexto>(options => {
     options.UseMySql(
-        builder.Configuration.GetConnectionString("mysql"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("mysql"))
+        builder.Configuration.GetConnectionString("MySql"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySql"))
     );
 });
 
@@ -45,10 +46,59 @@ app.MapGet("/", () => Results.Json(new Home())).WithTags("Home");
 #endregion
 
 #region Administrador
+
+app.MapPost("administrador/",([FromBody]AdministradorDTO administradorDTO, IAdministradorServico administradorServico) => {
+    
+    var validarAdminstrador = new ErrosValidacao();
+    IAdministradorServico.ValidarAdminstrador(administradorDTO).ForEach(validarAdminstrador.MensagensErrosList.Add);
+        
+    if(validarAdminstrador.MensagensErrosList.Count > 0)
+    {
+        return Results.BadRequest(validarAdminstrador);
+    } else {
+        var adm = administradorServico.Incluir(IAdministradorServico.AdministradorConverter(administradorDTO));
+        
+        AdministradorModelView admView = IAdministradorServico.AdministradorConverter(adm);
+
+        return Results.Created($"/administrador/{adm.Id}", admView);
+        
+    }    
+}).WithTags("Administradores");
+
 app.MapPost("administrador/login",([FromBody]LoginDTO loginDTO, IAdministradorServico administradorServico) => {
     if(administradorServico.Login(loginDTO)!=null) {
         return Results.Ok("Login realizado com sucesso.");
     } else return Results.Unauthorized();
+}).WithTags("Administradores");
+
+app.MapGet("/administrador/{id}",([FromRoute]int? id, IAdministradorServico administradorServico) => {
+    var adm = administradorServico.BuscarPorId((int)id);
+    
+    if(adm == null) {
+        return Results.NotFound();
+    }  else {
+        AdministradorModelView admView = IAdministradorServico.AdministradorConverter(adm);
+        return Results.Ok(admView);
+    } 
+
+}).WithTags("Administradores");
+
+app.MapGet("/administradores",([FromQuery]int? pagina, IAdministradorServico administradorServico) => {
+    if(pagina == null) {
+        pagina = 1;
+    }
+    var administradores = administradorServico.Todos((int)pagina);
+    if(administradores.Count > 0) {
+
+        List<AdministradorModelView> admView = new List<AdministradorModelView>();
+        administradores.ForEach(a => admView.Add(IAdministradorServico.AdministradorConverter(a)));
+
+        return Results.Ok(admView);
+    } else 
+    {
+        return Results.NotFound();
+    }
+    
 }).WithTags("Administradores");
 #endregion
 
@@ -78,15 +128,7 @@ app.MapPost("/veiculo", ([FromBody] VeiculoDTO veiculoDTO, IVeiculoServico veicu
     }    
 }).WithTags("Veiculos");
 
-app.MapGet("/veiculos",([FromQuery]int? pagina, IVeiculoServico veiculoServico) => {
-    if(pagina == null) {
-        pagina = 1;
-    }
-    var veiculos = veiculoServico.Todos((int)pagina);
-    return Results.Ok(veiculos);
-}).WithTags("Veiculos");
-
-app.MapGet("/veiculos/{id}",([FromRoute]int? id, IVeiculoServico veiculoServico) => {
+app.MapGet("/veiculo/{id}",([FromRoute]int? id, IVeiculoServico veiculoServico) => {
     var veiculo = veiculoServico.BuscarPorId((int)id);
     
     if(veiculo == null) {
@@ -95,7 +137,7 @@ app.MapGet("/veiculos/{id}",([FromRoute]int? id, IVeiculoServico veiculoServico)
 
 }).WithTags("Veiculos");
 
-app.MapPut("/veiculos/{id}",([FromRoute]int? id, [FromBody]VeiculoDTO veiculoDTO, IVeiculoServico veiculoServico) => {
+app.MapPut("/veiculo/{id}",([FromRoute]int? id, [FromBody]VeiculoDTO veiculoDTO, IVeiculoServico veiculoServico) => {
     
     var validacaoVeiculo = ValidarVeiculoDTO(veiculoDTO);
 
@@ -117,15 +159,23 @@ app.MapPut("/veiculos/{id}",([FromRoute]int? id, [FromBody]VeiculoDTO veiculoDTO
 
 }).WithTags("Veiculos");
 
-app.MapDelete("/veiculos/{id}",([FromRoute]int? id, IVeiculoServico veiculoServico) => {
+app.MapDelete("/veiculo/{id}",([FromRoute]int? id, IVeiculoServico veiculoServico) => {
     var veiculoBD = veiculoServico.BuscarPorId((int)id);
     
     if(veiculoBD == null) {
         return Results.NotFound();
     }  else {
         veiculoServico.Apagar(veiculoBD);
-        return Results.Ok();
+        return Results.NoContent();
     }
+}).WithTags("Veiculos");
+
+app.MapGet("/veiculos",([FromQuery]int? pagina, IVeiculoServico veiculoServico) => {
+    if(pagina == null) {
+        pagina = 1;
+    }
+    var veiculos = veiculoServico.Todos((int)pagina);
+    return Results.Ok(veiculos);
 }).WithTags("Veiculos");
 #endregion
 
