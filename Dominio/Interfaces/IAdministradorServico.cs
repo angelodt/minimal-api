@@ -29,6 +29,7 @@ namespace MinimalApi.Dominio.Interfaces
         public static AdministradorModelView AdministradorConverter(Administrador administrador)
         {
                 return new AdministradorModelView {
+                    Id = administrador.Id,
                     Email = administrador.Email,
                     Perfil= administrador.Perfil
                 };
