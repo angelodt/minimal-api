@@ -10,7 +10,7 @@ namespace MinimalApi.Dominio.Interfaces
     {
         public Administrador Login(LoginDTO loginDTO);
 
-        public Administrador? BuscarPorId(int id);
+        public Administrador BuscarPorId(int id);
 
         public static Administrador AdministradorConverter(AdministradorDTO administradorDTO)
         {

@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MinimalApi.Dominio.Entidades;
+using MinimalApi.Dominio.Servicos;
 using MinimalApi.Infraestrutura.DB;
 
 namespace Test.Domain.Servicos
@@ -72,7 +73,7 @@ namespace Test.Domain.Servicos
             var admBD = admService.BuscarPorId(IdTeste);
 
             //Assert
-            Assert.AreEqual(IdTeste, admBD.Id);
+            Assert.AreEqual(IdTeste, admBD?.Id);
 
         }
         
