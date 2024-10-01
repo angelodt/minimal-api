@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using minimal_api.Dominio.Entidades;
 using MinimalApi.Dominio.Entidades;
 
 namespace MinimalApi.Infraestrutura.DB
@@ -26,7 +21,7 @@ namespace MinimalApi.Infraestrutura.DB
                 Id = 1,
                 Email = "administrador@teste.com",
                 Senha = "123456",
-                Perfil = "Adm"
+                Perfil = "Administrador"
             });
         }
 
