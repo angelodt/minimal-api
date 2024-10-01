@@ -3,7 +3,7 @@ using MinimalApi.Dominio.Interfaces;
 using MinimalApi.DTOs;
 using MinimalApi.Infraestrutura.DB;
 
-namespace minimal_api.Dominio.Servicos
+namespace MinimalApi.Dominio.Servicos
 {
     public class AdministradorServico : IAdministradorServico
     {

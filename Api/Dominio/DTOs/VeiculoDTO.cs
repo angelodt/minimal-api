@@ -1,4 +1,4 @@
-namespace minimal_api.Dominio.DTOs
+namespace MinimalApi.Dominio.DTOs
 {
     public record VeiculoDTO
     {

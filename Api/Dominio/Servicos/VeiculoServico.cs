@@ -1,8 +1,8 @@
-using minimal_api.Dominio.Interfaces;
+using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.Entidades;
 using MinimalApi.Infraestrutura.DB;
 
-namespace minimal_api.Dominio.Servicos
+namespace MinimalApi.Dominio.Servicos
 {
     public class VeiculoServico : IVeiculoServico
     {

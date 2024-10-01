@@ -2,7 +2,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using minimal_api.Dominio.Servicos;
 using MinimalApi.Dominio.Entidades;
 using MinimalApi.Infraestrutura.DB;
 
